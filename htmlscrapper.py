@@ -2,16 +2,35 @@
 # Body
 # Save to excel
 
-print("Hello HTML!")
+# import easygui as eg
+import xml.etree.ElementTree as ET
+from lxml import etree
+from html.parser import HTMLParser
+from lxml import html
+
+# src = eg.fileopenbox()
+src = 'C:/Scripting/Git/html-scrapping/d0178777.HTM'
+tree = html.parse(src)
+dwgs = tree.xpath('//font[@class="labelText4Blue"]/text()')
+
+parser = etree.HTMLParser()
+s = etree.parse(src,parser)
 
 # from pandas import DataFrame
 import pandas as pd
-l1 = [1,2,3,4]
-l2 = [1,2,3,4]
-df = pd.DataFrame({'Stimulus Time': l1, 'Reaction Time': l2})
+# l1 = [1,2,3,4]
+# l2 = [1,2,3,4]
+# df = pd.DataFrame({'Stimulus Time': l1, 'Reaction Time': l2})
+# dwgs = []
+problems = list(range(0,len(dwgs)))
+names = list(range(0,len(dwgs)))
+properties = list(range(0,len(dwgs)))
+values = list(range(0,len(dwgs)))
+
+df = pd.DataFrame({'Files': dwgs, 'Type': problems, 'Data': names, 'Property': properties, 'Current Value': values})
 df
 
-df.to_excel('test.xlsx', sheet_name='sheet1', index=False)
+df.to_excel('Filename.xlsx', sheet_name='SheetName', index=False)
 
 # Save to csv
 # f = open('example.csv','w')
