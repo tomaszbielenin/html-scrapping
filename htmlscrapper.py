@@ -3,18 +3,17 @@
 # Save to excel
 
 # import easygui as eg
-import xml.etree.ElementTree as ET
-from lxml import etree
-from html.parser import HTMLParser
-from lxml import html
 
-# src = eg.fileopenbox()
-src = 'C:/Scripting/Git/html-scrapping/d0178777.HTM'
-tree = html.parse(src)
-dwgs = tree.xpath('//font[@class="labelText4Blue"]/text()')
+from bs4 import BeautifulSoup as BS
+import re
 
-parser = etree.HTMLParser()
-s = etree.parse(src,parser)
+with open('C:/Scripting/Git/html-scrapping/d0178777.HTM') as fp:
+    results = BS(fp).find(id="ResultsTable")
+
+dwgs = results.find_all('font', {'class':'labelText4Blue'})
+dwgnames = []
+for dwg in dwgs:
+    dwgnames.append(dwg.text.split('\\')[-1].rstrip())
 
 # from pandas import DataFrame
 import pandas as pd
@@ -22,12 +21,12 @@ import pandas as pd
 # l2 = [1,2,3,4]
 # df = pd.DataFrame({'Stimulus Time': l1, 'Reaction Time': l2})
 # dwgs = []
-problems = list(range(0,len(dwgs)))
-names = list(range(0,len(dwgs)))
-properties = list(range(0,len(dwgs)))
-values = list(range(0,len(dwgs)))
+problems = list(range(0,len(dwgnames)))
+names = list(range(0,len(dwgnames)))
+properties = list(range(0,len(dwgnames)))
+values = list(range(0,len(dwgnames)))
 
-df = pd.DataFrame({'Files': dwgs, 'Type': problems, 'Data': names, 'Property': properties, 'Current Value': values})
+df = pd.DataFrame({'Files': dwgnames, 'Type': problems, 'Data': names, 'Property': properties, 'Current Value': values})
 df
 
 df.to_excel('Filename.xlsx', sheet_name='SheetName', index=False)
