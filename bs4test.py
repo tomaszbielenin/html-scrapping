@@ -14,6 +14,8 @@ def dwgproblems(dwg):
     problems = dwg.find_all('table')[3].find('tr').find_next_siblings('tr')
     return problems
 
+path = r'C:/Scripting/Git/html-scrapping/dwgs.xls'
+writer = pd.ExcelWriter(path, engine = 'xlsxwriter')
 for dwg in results:
     dct = {}
     troubles = dwgproblems(dwg)
@@ -31,8 +33,9 @@ for dwg in results:
         items.append(dct[key][0])
         issues.append(dct[key][1])
     df = pd.DataFrame({'Item': items, 'Issue': issues})
-    df.to_excel('Dwgs.xlsx', sheet_name=dwgname(dwg), index=False)
-
+    df.to_excel(writer, sheet_name=dwgname(dwg), index=False)
+    writer.save()
+    writer.close()
 # dwgname = results[25].find_all('table')[1].find('font').text.split('\\')[-1].rstrip() # dwgname
 # troubles = results[25].find_all('table')[3].find('tr').find_next_siblings('tr') # problemtable
 
