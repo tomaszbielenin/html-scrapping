@@ -5,6 +5,11 @@
 from bs4 import BeautifulSoup as BS
 import pandas as pd
 import re
+import os
+
+def filename(file):
+    filename = os.path.basename(file)).split(".")[0]
+    return name
 
 def dwgname(dwg):
     name = dwg.find_all('table')[1].find('font').text.split('\\')[-1].rstrip()
