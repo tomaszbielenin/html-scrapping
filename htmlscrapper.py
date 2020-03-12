@@ -8,8 +8,8 @@ import re
 import os
 
 def filename(file):
-    filename = os.path.basename(file)).split(".")[0]
-    return name
+    filename = os.path.basename(file).split(".")[0]
+    return filename
 
 def dwgname(dwg):
     name = dwg.find_all('table')[1].find('font').text.split('\\')[-1].rstrip()
@@ -19,7 +19,10 @@ def dwgproblems(dwg):
     problems = dwg.find_all('table')[3].find('tr').find_next_siblings('tr')
     return problems
 
-with open('C:/Scripting/Git/html-scrapping/d0178772.HTM') as fp:
+print('-- Select input file:')
+path = easygui.fileopenbox(default=sFolder)
+
+with open(path) as fp:
     # results = BS(fp).find(id="ResultsTable")
     results = BS(fp).find_all('table',id=re.compile('ErrDwg[0-9]*'))
 
