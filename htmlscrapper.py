@@ -1,11 +1,16 @@
 # Add file naming
 # Add batch mode
 # Add some UI
+# df.to_excel - append to existing
+# easygui windows descriptions
+# handling exception - if easygui open is calcelled
+# Multiple files handling - one or multiple spreadsheets 
 
 from bs4 import BeautifulSoup as BS
 import pandas as pd
 import re
 import os
+import easygui
 
 def filename(file):
     filename = os.path.basename(file).split(".")[0]
@@ -20,11 +25,14 @@ def dwgproblems(dwg):
     return problems
 
 print('-- Select input file:')
-path = easygui.fileopenbox(default=sFolder)
+sfile = easygui.fileopenbox(default="C://")
+print(sfile)
+print('-- Select output file:')
+dfile = easygui.fileopenbox(default=os.path.dirname(sfile)) # Can't say why it shows parent folder
+print(dfile)
 
-with open(path) as fp:
-    # results = BS(fp).find(id="ResultsTable")
-    results = BS(fp).find_all('table',id=re.compile('ErrDwg[0-9]*'))
+with open(sfile) as fp:
+    results = BS(fp,features="lxml").find_all('table',id=re.compile('ErrDwg[0-9]*')) #lxml parser specified to avoid additional messages
 
 i=0
 dct = {}
@@ -72,4 +80,5 @@ for key in dct:
     standard.append(dct[key][4])
         
 df = pd.DataFrame({'Drawing' : drawings, 'Item': items, 'Property': properties, 'Current' : current, 'Standard' : standard})
-df.to_excel('d0178772.xlsx', sheet_name='Problems', index=False)
+with pd.ExcelWriter(dfile) as writer:
+    df.to_excel(writer, sheet_name=filename(sfile), index=False) # Returns 'No Bottleneck unit testing available' when run from terminal

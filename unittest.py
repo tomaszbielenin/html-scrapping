@@ -5,7 +5,7 @@ import os
 import easygui
 
 def filename(file):
-    filename = os.path.basename(file).split(".")[0]
+    filename = os.path.basename(file).split(".")[0].join()
     return filename
 
 def dwgname(dwg):
@@ -17,11 +17,10 @@ def dwgproblems(dwg):
     return problems
 
 print('-- Select input file:')
-path = easygui.fileopenbox(default="C://")
+sf = easygui.fileopenbox(default="C://")
+print(sf)
+print('-- Select output file:')
+df = easygui.fileopenbox(default=os.path.dirname(sf)) # Can't say why it shows parent folder
 
-with open(path) as fp:
-    # results = BS(fp).find(id="ResultsTable")
-    results = BS(fp).find_all('table',id=re.compile('ErrDwg[0-9]*'))
-
-print(len(results))
-input()
+with open(sf) as fp:
+    results = BS(fp,features="lxml").find_all('table',id=re.compile('ErrDwg[0-9]*')) #lxml parser specified to avoid additional messages
