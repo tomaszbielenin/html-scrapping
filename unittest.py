@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup as BS
 import pandas as pd
 import re
+import sys
 import os
 import easygui
 
 def filename(file):
-    filename = os.path.basename(file).split(".")[0].join()
+    filename = os.path.basename(file).split(".")[0]
     return filename
 
 def dwgname(dwg):
@@ -17,10 +18,15 @@ def dwgproblems(dwg):
     return problems
 
 print('-- Select input file:')
-sf = easygui.fileopenbox(default="C://")
-print(sf)
-print('-- Select output file:')
-df = easygui.fileopenbox(default=os.path.dirname(sf)) # Can't say why it shows parent folder
+sfile = easygui.fileopenbox(title='Select input file:', default="C://")
+if type(sfile) != str:
+    sys.exit('No input file selected. Exiting program.')
+else:
+    print(sfile)
 
-with open(sf) as fp:
-    results = BS(fp,features="lxml").find_all('table',id=re.compile('ErrDwg[0-9]*')) #lxml parser specified to avoid additional messages
+print('-- Select output file:')
+dfile = easygui.fileopenbox(title='Select output file:', default=os.path.dirname(sfile)) # Can't say why it shows parent folder
+if type(dfile) != str:
+    sys.exit('No output file selected. Exiting program.')
+else:
+    print(dfile)

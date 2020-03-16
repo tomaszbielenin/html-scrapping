@@ -9,6 +9,7 @@
 from bs4 import BeautifulSoup as BS
 import pandas as pd
 import re
+import sys
 import os
 import easygui
 
@@ -25,11 +26,18 @@ def dwgproblems(dwg):
     return problems
 
 print('-- Select input file:')
-sfile = easygui.fileopenbox(default="C://")
-print(sfile)
+sfile = easygui.fileopenbox(title='Select input file:', default="C://")
+if type(sfile) != str:
+    sys.exit('No input file selected. Exiting program.')
+else:
+    print(sfile)
+
 print('-- Select output file:')
-dfile = easygui.fileopenbox(default=os.path.dirname(sfile)) # Can't say why it shows parent folder
-print(dfile)
+dfile = easygui.fileopenbox(title='Select output file:', default=os.path.dirname(sfile)) # Can't say why it shows parent folder
+if type(dfile) != str:
+    sys.exit('No output file selected. Exiting program.')
+else:
+    print(dfile)
 
 with open(sfile) as fp:
     results = BS(fp,features="lxml").find_all('table',id=re.compile('ErrDwg[0-9]*')) #lxml parser specified to avoid additional messages
@@ -82,3 +90,5 @@ for key in dct:
 df = pd.DataFrame({'Drawing' : drawings, 'Item': items, 'Property': properties, 'Current' : current, 'Standard' : standard})
 with pd.ExcelWriter(dfile) as writer:
     df.to_excel(writer, sheet_name=filename(sfile), index=False) # Returns 'No Bottleneck unit testing available' when run from terminal
+
+print('Done!')
