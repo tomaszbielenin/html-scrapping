@@ -17,16 +17,18 @@ def dwgproblems(dwg):
     problems = dwg.find_all('table')[3].find('tr').find_next_siblings('tr')
     return problems
 
-print('-- Select input file:')
-sfile = easygui.fileopenbox(title='Select input file:', default="C://")
-if type(sfile) != str:
-    sys.exit('No input file selected. Exiting program.')
-else:
-    print(sfile)
+def fileselection(message, path):
+    print(message)
+    f = easygui.fileopenbox(title=str(message), default=str(path))
+    if type(f) != str:
+        if easygui.ynbox('No file selected. Do you want to continue?', 'Continue?', ('Yes', 'No')) == True:
+            fileselection(message, path)
+        else:
+            sys.exit('Exiting program.')
+    else:
+        print(f)
+    return f
 
-print('-- Select output file:')
-dfile = easygui.fileopenbox(title='Select output file:', default=os.path.dirname(sfile)) # Can't say why it shows parent folder
-if type(dfile) != str:
-    sys.exit('No output file selected. Exiting program.')
-else:
-    print(dfile)
+sfile = fileselection('-- Select input file:', 'c://')
+
+dfile = fileselection('-- Select output file:', 'c://')
