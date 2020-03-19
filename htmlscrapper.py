@@ -1,4 +1,5 @@
-# Tasklist
+# Tasklist:
+# Add comments at least for core function
 # Multiple files handling - one or multiple spreadsheets (df.to_excel - append to existing)
 
 # import bottleneck as bn # import bn to supress Bottleneck unit testing error 
